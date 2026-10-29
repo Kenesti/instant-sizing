@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
 const TOOLS = [
   { name: "Image Resizer", href: "/resize" },
@@ -17,6 +17,7 @@ export default function Header({ light = false }: { light?: boolean }) {
   const [open, setOpen] = useState(false);
   const [toolsOpen, setToolsOpen] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const toolsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     try {
@@ -25,8 +26,26 @@ export default function Header({ light = false }: { light?: boolean }) {
     } catch {}
   }, []);
 
+  useEffect(() => {
+    if (!toolsOpen) return;
+    function onDocClick(e: MouseEvent) {
+      if (toolsRef.current && !toolsRef.current.contains(e.target as Node)) {
+        setToolsOpen(false);
+      }
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setToolsOpen(false);
+      }
+    document.addEventListener("mousedown", onDocClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [toolsOpen]);
+
   return (
-    <header className={light ? "bg-[#0a0a0b]" : "bg-[#0a0a0b]/80 backdrop-blur-md"}>
+    <header className={light ? "bg-[#0a0a0b]" : "sticky top-0 z-40 bg-[#0a0a0b]/90 backdrop-blur-md"}>
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
@@ -35,16 +54,43 @@ export default function Header({ light = false }: { light?: boolean }) {
           </Link>
 
           <nav className="hidden items-center gap-7 md:flex" aria-label="Main">
-            <div className="group relative" onClick={() => setToolsOpen((v) => !v)}>
-              <button aria-expanded={toolsOpen} className="text-sm font-medium text-zinc-300 transition hover:text-white">Tools <span className="text-zinc-500 text-xs">▾</span></button>
-              <div className={`absolute left-1/2 top-full z-50 w-64 -translate-x-1/2 pt-3 transition-all ${toolsOpen ? "visible opacity-100" : "invisible opacity-0"} group-hover:visible group-hover:opacity-100`}>
-                <div className="card p-2">
+            <div className="relative" ref={toolsRef}>
+              <button
+                aria-expanded={toolsOpen}
+                aria-haspopup="true"
+                onClick={() => setToolsOpen((v) => !v)}
+                className={`flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-sm font-medium transition ${toolsOpen ? "bg-white/5 text-white" : "text-zinc-300 hover:text-white"}`}
+              >
+                Tools
+                <ChevronDown size={14} className={`text-zinc-500 transition-transform duration-200 ${toolsOpen ? "rotate-180" : ""}`} />
+              </button>
+              {toolsOpen && (
+                <div
+                  role="menu"
+                  className="absolute left-1/2 top-full z-50 mt-2 w-72 -translate-x-1/2 origin-top rounded-xl border border-[#3a3a41] bg-[#1a1a1d] p-1.5 shadow-[0_16px_48px_-12px_rgba(0,0,0,0.8)] ring-1 ring-black/40 sm:w-80"
+                >
                   {TOOLS.map((t) => (
-                    <Link key={t.href} href={t.href} onClick={() => setToolsOpen(false)} className="block rounded-lg px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/5 hover:text-white">{t.name}</Link>
+                    <Link
+                      key={t.href}
+                      href={t.href}
+                      role="menuitem"
+                      onClick={() => setToolsOpen(false)}
+                      className="block rounded-lg px-3 py-2.5 text-sm text-zinc-300 transition hover:bg-violet-500/15 hover:text-white"
+                    >
+                      {t.name}
+                    </Link>
                   ))}
-                  <Link href="/tools" onClick={() => setToolsOpen(false)} className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-violet-300 hover:bg-white/5">All tools →</Link>
+                  <div className="my-1.5 border-t border-[#3a3a41]" />
+                  <Link
+                    href="/tools"
+                    role="menuitem"
+                    onClick={() => setToolsOpen(false)}
+                    className="block rounded-lg px-3 py-2.5 text-sm font-semibold text-violet-300 transition hover:bg-violet-500/15"
+                  >
+                    All tools →
+                  </Link>
                 </div>
-              </div>
+              )}
             </div>
             <Link href="/sizes" className="text-sm font-medium text-zinc-300 transition hover:text-white">Size guides</Link>
             <Link href="/compare" className="text-sm font-medium text-zinc-300 transition hover:text-white">Compare</Link>
