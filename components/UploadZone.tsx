@@ -163,13 +163,20 @@ export default function UploadZone({
         role="button"
         tabIndex={0}
         onKeyDown={(e) => e.key === "Enter" && inputRef.current?.click()}
-        aria-label="Upload an image"
+        aria-label="Upload a photo"
       >
         <UploadCloud className="mb-3 text-violet-400" size={36} />
         <p className="font-semibold">{busy ? "Loading…" : "Upload a photo"}</p>
         <p className="mt-1 text-sm text-muted">or drag and drop</p>
         <p className="mt-3 text-xs text-zinc-500">{hint}</p>
-        <input ref={inputRef} type="file" accept={accept} className="hidden" onChange={(e) => handleFile(e.target.files?.[0])} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept={accept}
+          className="hidden"
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => handleFile(e.target.files?.[0])}
+        />
       </div>
       {error && <p className="mt-3 text-center text-sm text-rose-400">{error}</p>}
       {showSamples && (
