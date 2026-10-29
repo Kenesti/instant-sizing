@@ -42,6 +42,7 @@ npm run build && npm start   # production
 
 ## Notes
 
+- `package-lock.json` is not committed; `npm install` regenerates it from the pinned versions in `package.json`.
 - The background remover downloads ~40 MB of model assets on first use, then caches them. It runs entirely on-device.
 - Accounts and history are localStorage-based demo state; there is no backend by design (privacy is the product's core premise).
 - Sample photos offered in the upload zone are generated client-side with canvas — no binary assets in the repo.
