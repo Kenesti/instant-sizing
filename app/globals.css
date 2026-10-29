@@ -1,0 +1,217 @@
+@import "tailwindcss";
+
+:root {
+  --ink: #0a0a0b;
+  --panel: #131315;
+  --panel-2: #1a1a1d;
+  --line: #26262a;
+  --violet: #8b5cf6;
+  --violet-2: #a78bfa;
+  --pink: #ec4899;
+  --cyan: #22d3ee;
+  --amber: #f59e0b;
+  --green: #34d399;
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+}
+
+* {
+  border-color: var(--line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ink);
+  color: var(--text);
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(139, 92, 246, 0.4);
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+.gradient-text {
+  background: linear-gradient(92deg, #fda4f5 0%, #a78bfa 45%, #67e8f9 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(600px 300px at 20% 10%, rgba(139, 92, 246, 0.18), transparent 60%),
+    radial-gradient(500px 280px at 80% 20%, rgba(236, 72, 153, 0.14), transparent 60%),
+    radial-gradient(700px 400px at 50% 100%, rgba(34, 211, 238, 0.08), transparent 60%);
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.card-2 {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: linear-gradient(93deg, #7c3aed, #a855f7 55%, #d946ef);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  box-shadow: 0 8px 24px -10px rgba(139, 92, 246, 0.55);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 12px 30px -10px rgba(139, 92, 246, 0.7);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  filter: none;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.btn-ghost:hover {
+  border-color: #52525b;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--violet-2);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  background: rgba(139, 92, 246, 0.08);
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+}
+
+.section {
+  padding: 4.5rem 1.25rem;
+}
+
+.section-head {
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+table.cmp {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+table.cmp th, table.cmp td {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+table.cmp th {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+table.cmp tr:hover td {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+input, select, textarea {
+  outline: none;
+}
+
+.field {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.92rem;
+  color: var(--text);
+  transition: border-color 0.2s ease;
+}
+
+.field:focus {
+  border-color: var(--violet);
+}
+
+.dropzone {
+  border: 2px dashed #3f3f46;
+  border-radius: 18px;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.dropzone.drag {
+  border-color: var(--violet);
+  background: rgba(139, 92, 246, 0.06);
+}
+
+.prose-page :where(p) { color: var(--muted); line-height: 1.75; margin-bottom: 1rem; }
+.prose-page :where(h2) { font-size: 1.5rem; margin: 2.2rem 0 1rem; }
+.prose-page :where(h3) { font-size: 1.15rem; margin: 1.6rem 0 0.75rem; }
+
+@media (max-width: 640px) {
+  .section { padding: 3rem 1rem; }
+}
