@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 
 const TOOLS = [
+  { name: "AI Photo Editor", href: "/ai-editor" },
   { name: "Image Resizer", href: "/resize" },
   { name: "Image Compressor", href: "/compress" },
   { name: "Image Converter", href: "/convert" },
