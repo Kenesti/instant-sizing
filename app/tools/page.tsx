@@ -3,7 +3,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Breadcrumbs, JsonLd } from "@/components/Seo";
-import { Scaling, Minimize2, Repeat, Eraser, Sparkles, Maximize2, ChevronRight } from "lucide-react";
+import { Scaling, Minimize2, Repeat, Eraser, Sparkles, Maximize2, Wand2, ChevronRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "All Free Image Tools — Resize, Compress, Convert & More | Insightsize",
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 const TOOLS = [
+  { icon: Wand2, n: "AI Photo Editor", d: "Describe your edit in plain English — the AI plans and runs every step in your browser.", href: "/ai-editor" },
   { icon: Scaling, n: "Image Resizer", d: "Resize to any platform preset or exact pixels with fit, fill, and stretch modes.", href: "/resize" },
   { icon: Minimize2, n: "Image Compressor", d: "Shrink file sizes with a live quality slider and instant preview.", href: "/compress" },
   { icon: Repeat, n: "Image Converter", d: "Convert between PNG, JPG, and WebP without leaving your browser.", href: "/convert" },
