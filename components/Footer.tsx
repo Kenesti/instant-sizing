@@ -4,6 +4,7 @@ const cols = [
   {
     title: "Free tools",
     links: [
+      { name: "AI Photo Editor", href: "/ai-editor" },
       { name: "Image Resizer", href: "/resize" },
       { name: "Image Compressor", href: "/compress" },
       { name: "Image Converter", href: "/convert" },
