@@ -53,7 +53,14 @@ export default function HeroUpload() {
         <p className="font-semibold">{busy ? "Opening editor…" : "Upload a photo"}</p>
         <p className="mt-1 text-sm text-muted">or drag and drop</p>
         <p className="mt-3 text-xs text-zinc-500">PNG · JPG · WEBP</p>
-        <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={(e) => handle(e.target.files?.[0])} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onClick={(e) => e.stopPropagation()}
+          onChange={(e) => handle(e.target.files?.[0])}
+        />
       </div>
       <p className="mt-3 text-xs text-zinc-500">
         Opens in{" "}
