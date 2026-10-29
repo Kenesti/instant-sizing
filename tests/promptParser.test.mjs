@@ -139,6 +139,44 @@ t("dedup: no repeated ops", () => {
   eq(k.filter((x) => x === "remove-bg").length, 1);
 });
 
+// --- AI transformations ---
+t("remove object with spatial side", () => {
+  const op = find("remove the man from the left side of the photo and blend the background seamlessly", "remove-object");
+  eq(op.object, "man");
+  eq(op.spatial, "left");
+  eq(op.seamless, true);
+});
+t("remove object right side", () => {
+  const op = find("remove the car on the right", "remove-object");
+  eq(op.object, "car");
+  eq(op.spatial, "right");
+});
+t("remove largest object", () => {
+  const op = find("remove the largest person", "remove-object");
+  eq(op.spatial, "largest");
+});
+t("remove object without spatial", () => {
+  const op = find("erase the dog", "remove-object");
+  eq(op.object, "dog");
+  eq(op.spatial, undefined);
+});
+t("photoshop out phrasing", () => {
+  const op = find("photoshop out the bird at the top", "remove-object");
+  eq(op.object, "bird");
+  eq(op.spatial, "top");
+});
+t("center selection", () => {
+  const op = find("remove the bottle in the center", "remove-object");
+  eq(op.spatial, "center");
+});
+t("background removal still separate from object removal", () => {
+  eq(kinds("remove the background"), ["remove-bg", "convert"]);
+});
+t("object removal does not collide with bg removal", () => {
+  const op = find("remove the man from the left and blend the background seamlessly", "remove-object");
+  eq(parsePrompt("remove the man from the left and blend the background seamlessly").some((o) => o.kind === "remove-bg"), false);
+});
+
 t("EDIT_OPS_HELP reference ships all op families", () => {
   const joined = EDIT_OPS_HELP.join(" ").toLowerCase();
   for (const probe of ["remove the background", "upscale", "vignette", "webp", "polaroid", "denoise"])
