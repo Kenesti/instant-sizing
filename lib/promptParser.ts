@@ -62,6 +62,37 @@ export function parsePrompt(prompt: string): Op[] {
     if (!ops.some((x) => x.kind === o.kind)) ops.push(o);
   };
 
+  // --- AI transformation: object removal with spatial understanding ---
+  const wantsRemoval = /\b(remove|erase|delete|get rid of|take out|take away|clean up|cleanse|retouch|photoshop out|edit out|magic out)\b/.test(p);
+  const spatialMatch =
+    p.match(/\bon (the )?(left|right)\b|\bto (the )?(left|right)\b|\b(left|right)[- ](hand )?side\b|\bat (the )?(top|bottom)\b|\bin (the )?(center|middle|middle of the frame)\b|\b(largest|biggest|smallest|main|foreground|background)\b/);
+  const spatial = spatialMatch
+    ? /left/.test(spatialMatch[0]) ? "left"
+      : /right/.test(spatialMatch[0]) ? "right"
+      : /top/.test(spatialMatch[0]) ? "top"
+      : /bottom/.test(spatialMatch[0]) ? "bottom"
+      : /center|middle/.test(spatialMatch[0]) ? "center"
+      : /largest|biggest|main|foreground/.test(spatialMatch[0]) ? "largest"
+      : "smallest"
+    : undefined;
+  if (wantsRemoval && !/background\b|transparent|cut ?out|isolate|no background|knock ?out/.test(p.replace(/seamlessly|seamless|professionally|the gap|blend(ed|ing)? (the )?(rest|background|surroundings)/g, ""))) {
+    // find the object being removed: "remove the X" / "remove the X from ..." / "edit out the X"
+    const objMatch =
+      p.match(/(?:remove|erase|delete|get rid of|take out|take away|photoshop out|edit out|magic out|clean up|cleanse|retouch)\s+(?:the |a |an |all |any )?([a-z]+(?: [a-z]+)?)/);
+    const object = objMatch ? objMatch[1].replace(/\b(from|on|at|in|near|by|of|and|then|that|is|its)\b.*$/, "").trim() : "";
+    if (object && !/^(background|noise|grain|whole|entire)$/.test(object)) {
+      const seamless = /seamless|blend|professionally|fill (in )?(the )?(gap|hole)|reconstruct|patch/.test(p);
+      push({
+        kind: "remove-object",
+        object,
+        spatial,
+        seamless,
+        label: `AI remove the ${object}${spatial ? ` (${spatial}${spatial === "largest" || spatial === "smallest" ? " match" : " side"})` : ""} — detect, cut, and ${seamless ? "seamlessly blend" : "fill"} the background`,
+        prio: 55,
+      });
+    }
+  }
+
   const noCrop = /without cropp?ing|don'?t crop|do not crop|fit (the )?(whole|entire)|see the whole|no crop/.test(p);
   const bg = /black (background|bars?)/.test(p) ? "#000000" : /white (background|bars?)/.test(p) ? "#ffffff" : "#ffffff";
   const ratio = ratioOf(p);
@@ -186,8 +217,8 @@ export function parsePrompt(prompt: string): Op[] {
 }
 
 export const EDIT_OPS_HELP = [
-  "remove the background · blur the background (bokeh) · resize 1080×1350 · Instagram story · YouTube thumbnail · expand to 16:9 · crop to 1:1",
+  "AI object removal — \"remove the man from the left side and blend the background seamlessly\" (any object: car, bird, chair… on the left/right/top/bottom/center, largest/smallest) · remove the background · blur the background (bokeh) · resize 1080×1350 · Instagram story · YouTube thumbnail · expand to 16:9 · crop to 1:1",
   "upscale 2×/4× · brighten 20% · darker · contrast +15 · more saturated · muted · warmer · cooler · black and white · sepia · invert",
   "auto-enhance / fix lighting · sharpen · denoise · film grain · vignette · cinematic · vintage · gaussian blur 8px",
-  "white border · polaroid frame · rounded corners · compress · save as WebP/PNG/JPG · rotate · flip — combine freely with “and”/“then”",
+  "white border · polaroid frame · rounded corners · compress · save as WebP/PNG/JPG · rotate · flip — combine freely with \"and\"/\"then\"",
 ];
