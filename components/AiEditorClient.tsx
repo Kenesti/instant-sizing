@@ -9,6 +9,7 @@ import {
   grayscaleCanvas, sepiaCanvas, invertCanvas, autoEnhanceCanvas, vignetteCanvas, grainCanvas,
   gaussianCanvas, sharpenCanvas, denoiseCanvas, borderCanvas, roundedCanvas, blurBgWithSubject,
 } from "@/lib/imageOps";
+import { detectObjects, selectDetection, inpaint } from "@/lib/aiTransform";
 import { Download, RotateCcw, Sparkles, Wand2, Check } from "lucide-react";
 
 function formatBytes(b: number) {
@@ -18,6 +19,7 @@ function formatBytes(b: number) {
 }
 
 const QUICK_PROMPTS = [
+  "Remove the man from the left side and blend the background seamlessly",
   "Remove the background and save as a transparent PNG",
   "Make it 1080 × 1350 for an Instagram post",
   "Auto-enhance, then sharpen a little",
@@ -62,7 +64,23 @@ export default function AiEditorClient() {
         setStatus(op.label);
         setProgress(Math.round(10 + (i / ops.length) * 80));
 
-        if (op.kind === "remove-bg") {
+        if (op.kind === "remove-object") {
+          setStatus("AI analyzing photo (object detection)…");
+          if (!current) current = await srcToCanvas(image.file);
+          const dets = await detectObjects(current);
+          const target = selectDetection(dets, current.width, current.height, {
+            kind: "object",
+            object: op.object as string,
+            spatial: op.spatial as ("left" | "right" | "top" | "bottom" | "center" | "largest" | "smallest") | undefined,
+          });
+          if (!target) {
+            throw new Error(
+              `Couldn't find a "${op.object as string}" in this photo. The AI detects people, cars, animals, furniture, and 70+ common object classes — try naming what's actually in the frame.`
+            );
+          }
+          setStatus(`Removing the ${op.object as string} (${Math.round(target.score * 100)}% confidence) and blending the background…`);
+          current = inpaint(current, target.box);
+        } else if (op.kind === "remove-bg") {
           const blob = await removeBgAI(currentFile ?? image.file);
           current = await srcToCanvas(blob);
           currentFile = null;
@@ -165,7 +183,9 @@ export default function AiEditorClient() {
       } catch {}
     } catch (e) {
       console.error(e);
-      setError("That edit could not run. The AI model needs a recent desktop browser (Chrome, Edge, or Firefox).");
+      setError(e instanceof Error && e.message.startsWith("Couldn't find")
+        ? e.message
+        : "That edit could not run. The AI model needs a recent desktop browser (Chrome, Edge, or Firefox).");
     } finally {
       setBusy(false);
     }
@@ -201,7 +221,7 @@ export default function AiEditorClient() {
               onChange={(e) => setPrompt(e.target.value)}
               rows={3}
               className="field mb-3 resize-none"
-              placeholder="e.g. Remove the background, auto-enhance, make it 1080 × 1350 for Instagram, save as PNG"
+              placeholder="e.g. Remove the man on the left, auto-enhance, then save as PNG"
               disabled={busy}
             />
 
