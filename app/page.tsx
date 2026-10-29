@@ -5,7 +5,7 @@ import HeroUpload from "@/components/HeroUpload";
 import { JsonLd } from "@/components/Seo";
 import { PLATFORMS } from "@/lib/presets";
 import {
-  Scaling, Maximize2, Eraser, Sparkles, Repeat, Minimize2,
+  Scaling, Maximize2, Eraser, Sparkles, Repeat, Minimize2, Wand2,
   Check, Star, ChevronRight,
 } from "lucide-react";
 
@@ -21,6 +21,7 @@ export const metadata = {
 };
 
 const TOOLS = [
+  { icon: Wand2, n: "AI Photo Editor", d: "Describe your edit in plain English — the AI plans and runs every step, privately in your browser.", href: "/ai-editor", cta: "Try the AI editor" },
   { icon: Scaling, n: "Image Resizer", d: "Resize to any platform preset or exact pixel dimensions with fit, fill, and stretch modes.", href: "/resize", cta: "Resize your photo" },
   { icon: Minimize2, n: "Image Compressor", d: "Shrink file sizes with a quality slider and live preview — perfect for faster stores.", href: "/compress", cta: "Compress image" },
   { icon: Repeat, n: "Image Converter", d: "Convert between PNG, JPG, and WebP without leaving your browser tab.", href: "/convert", cta: "Convert image" },
