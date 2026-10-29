@@ -41,7 +41,7 @@ export default function ResizePage() {
 
   function selectPreset(name: string) {
     setPresetName(name);
-    const p = activePlatform.presets.find((x) => x.name === name);
+    const p = PLATFORMS.find((x) => x.slug === platform)?.presets.find((y) => y.name === name);
     if (p) {
       setW(p.w);
       setH(p.h);
