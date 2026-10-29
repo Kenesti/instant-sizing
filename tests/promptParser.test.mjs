@@ -139,5 +139,11 @@ t("dedup: no repeated ops", () => {
   eq(k.filter((x) => x === "remove-bg").length, 1);
 });
 
+t("EDIT_OPS_HELP reference ships all op families", () => {
+  const joined = EDIT_OPS_HELP.join(" ").toLowerCase();
+  for (const probe of ["remove the background", "upscale", "vignette", "webp", "polaroid", "denoise"])
+    eq(joined.includes(probe), true, "missing " + probe);
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
