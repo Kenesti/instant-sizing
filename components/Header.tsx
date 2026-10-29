@@ -35,7 +35,7 @@ export default function Header({ light = false }: { light?: boolean }) {
     }
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") setToolsOpen(false);
-      }
+    }
     document.addEventListener("mousedown", onDocClick);
     document.addEventListener("keydown", onKey);
     return () => {
