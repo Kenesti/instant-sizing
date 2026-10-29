@@ -6,7 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://insightsize.app";
   const now = new Date();
 
-  const core = ["", "/tools", "/sizes", "/guides", "/compare", "/resize", "/compress", "/convert", "/background-remover", "/expand", "/upscale", "/signup", "/login"].map((p) => ({
+  const core = ["", "/tools", "/sizes", "/guides", "/compare", "/ai-editor", "/resize", "/compress", "/convert", "/background-remover", "/expand", "/upscale", "/signup", "/login"].map((p) => ({
     url: base + p,
     lastModified: now,
     changeFrequency: "weekly" as const,
